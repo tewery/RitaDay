@@ -1,0 +1,568 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Marck+Script&family=Nunito:wght@400;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: radial-gradient(circle at 10% 5%, #fff 0, transparent 26%),
+    linear-gradient(135deg, #ffedf4, #ffdce9);
+    color: #542d43;
+    font-family: Nunito, sans-serif;
+}
+
+header {
+    height: 68px;
+    padding: 0 max(calc((100% - 1100px)/2), 20px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff9;
+    border-bottom: 1px solid #f2c3d7;
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    backdrop-filter: blur(12px);
+}
+
+.logo {
+    font: 700 14px Comfortaa;
+    color: #bd3978;
+}
+
+.logo small {
+    display: block;
+    font: 700 8px Nunito;
+    letter-spacing: 1px;
+    color: #ad7891;
+    margin: 4px 0 0 39px;
+}
+
+header span {
+    font-size: 10px;
+    color: #a66b87;
+}
+
+main {
+    max-width: 1100px;
+    margin: auto;
+    padding: 25px 20px;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 7px 28px;
+}
+
+.hero small,
+.card > small,
+.heading small {
+    font-size: 9px;
+    letter-spacing: 1.7px;
+    font-weight: 900;
+    color: #d34e8c;
+}
+
+.hero h1 {
+    font: 600 clamp(42px, 6vw, 62px)/1 'Marck Script';
+    color: #a72e69;
+    margin: 10px 0;
+}
+
+.hero h1 i {
+    color: #e35a99;
+}
+
+.hero p {
+    font-size: 12px;
+    color: #a77991;
+}
+
+.sticker {
+    width: 112px;
+    height: 112px;
+    border: 2px dashed #e68ab4;
+    border-radius: 50%;
+    background: #ffd8e9;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    color: #d34e8c;
+    font: 40px 'Marck Script';
+    transform: rotate(7deg);
+}
+
+.sticker b {
+    font: 600 10px Comfortaa;
+    line-height: 1.5;
+}
+
+.card {
+    background: #fffafde8;
+    border: 1px solid #f0bfd4;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 9px 25px #b94d7b12;
+    margin-bottom: 18px;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.heading h2,
+.card h2 {
+    font: 600 26px 'Marck Script';
+    color: #9e3068;
+    margin: 3px 0 0;
+}
+
+.heading nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+nav b {
+    font: 700 12px Comfortaa;
+    min-width: 120px;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+nav button {
+    border: 1px solid #efb2cc;
+    border-radius: 9px;
+    background: #ffedf5;
+    color: #bd3978;
+    font-size: 22px;
+    width: 31px;
+    height: 31px;
+    cursor: pointer;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.dow {
+    text-align: center;
+    font-size: 9px;
+    color: #bd7897;
+    padding: 4px;
+}
+
+.calendar i {
+    min-height: 40px;
+}
+
+.day {
+    height: 41px;
+    border: 1px solid #f3d0df;
+    background: #fff6fa;
+    border-radius: 10px;
+    color: #75425c;
+    font-weight: 800;
+    position: relative;
+    cursor: pointer;
+}
+
+.day.chosen {
+    background: linear-gradient(140deg, #ef9fc1, #d94f91);
+    color: white;
+    border-color: #dc5b96;
+}
+
+.day em {
+    position: absolute;
+    bottom: 5px;
+    left: calc(50% - 2px);
+    width: 5px;
+    height: 5px;
+    background: #dc5a97;
+    border-radius: 50%;
+}
+
+.day.chosen em {
+    background: white;
+}
+
+.legend {
+    font-size: 9px;
+    color: #d34e8c;
+    margin-top: 12px;
+}
+
+.legend span {
+    color: #bd7897;
+}
+
+.columns {
+    display: grid;
+    grid-template-columns: 1.3fr .85fr;
+    gap: 18px;
+    align-items: start;
+}
+
+.pill {
+    font-size: 10px;
+    color: #c04b83;
+    background: #ffedf5;
+    border: 1px solid #f6c4d9;
+    border-radius: 20px;
+    padding: 7px 10px;
+}
+
+.progresslabel {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #ad7a92;
+    margin-bottom: 7px;
+}
+
+.progresslabel b {
+    color: #cf4c88;
+}
+
+.progress {
+    height: 7px;
+    background: #f8e1eb;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.progress span {
+    height: 100%;
+    width: 0;
+    display: block;
+    background: linear-gradient(90deg, #f3a6c7, #d94e91);
+    transition: width .2s;
+}
+
+.plan {
+    display: grid;
+    grid-template-columns: 25px 48px 1fr auto;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 8px;
+    border: 1px solid #f3d1df;
+    background: #fff7fb;
+    border-radius: 12px;
+    margin: 7px 0;
+}
+
+.tick {
+    width: 21px;
+    height: 21px;
+    border: 1.5px solid #e68ab3;
+    border-radius: 50%;
+    background: white;
+    color: white;
+    cursor: pointer;
+}
+
+.done .tick {
+    background: #e56ba2;
+}
+
+.time {
+    font-size: 10px;
+    color: #cf4e88;
+}
+
+.planinfo strong {
+    font-size: 11px;
+}
+
+.planinfo small {
+    display: block;
+    font-size: 9px;
+    color: #ad8196;
+    margin-top: 3px;
+    overflow-wrap: anywhere;
+}
+
+.done .planinfo strong {
+    text-decoration: line-through;
+    color: #b99aaa;
+}
+
+.actions {
+    display: flex;
+}
+
+.actions button {
+    border: 0;
+    background: none;
+    color: #c17a9a;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.empty {
+    text-align: center;
+    padding: 28px;
+    color: #ad7891;
+    font-size: 28px;
+}
+
+.empty b,
+.empty small {
+    display: block;
+    font: 600 17px 'Marck Script';
+}
+
+.empty small {
+    font: 10px Nunito;
+    margin-top: 5px;
+}
+
+.add {
+    width: 100%;
+    margin: 10px 0;
+    border: 1.5px dashed #e88ab5;
+    background: #fff0f6;
+    color: #c33d80;
+    border-radius: 11px;
+    padding: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.field {
+    display: block;
+    font-size: 10px;
+    color: #9d5b7b;
+    font-weight: 900;
+    margin: 10px 0;
+}
+
+.field input,
+.field select,
+.field textarea {
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+    border: 1px solid #efc6d8;
+    border-radius: 10px;
+    background: #fff7fb;
+    padding: 10px;
+    color: #5c3a4d;
+    font: 11px Nunito;
+    outline: none;
+}
+
+.field textarea {
+    resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+    border-color: #e879aa;
+    box-shadow: 0 0 0 3px #ed9fc21e;
+}
+
+.twocol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.save,
+.cancel {
+    border: 0;
+    border-radius: 10px;
+    padding: 11px;
+    font: 800 10px Nunito;
+    cursor: pointer;
+}
+
+.save {
+    background: linear-gradient(120deg, #ef9fc1, #dc5a97);
+    color: white;
+}
+
+.cancel {
+    background: #f9e3ed;
+    color: #9f5578;
+}
+
+.hint,
+#noteStatus {
+    font-size: 9px;
+    color: #b78ba0;
+}
+
+.care {
+    display: grid;
+    gap: 11px;
+    margin: 16px 0;
+}
+
+.care label {
+    font-size: 11px;
+    color: #71445b;
+}
+
+.care input {
+    accent-color: #dc5a97;
+}
+
+.message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    background: #ffe1ee;
+    border: 1px dashed #e99abd;
+    border-radius: 16px;
+    padding: 16px;
+    color: #a33d70;
+    font: 17px 'Marck Script';
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 17px 3px;
+    color: #b17f97;
+    font-size: 9px;
+}
+
+footer button {
+    border: 0;
+    background: none;
+    color: #c44d86;
+    text-decoration: underline;
+    cursor: pointer;
+    font: 800 9px Nunito;
+}
+
+@media(max-width:760px) {
+    .columns {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        padding-top: 10px;
+    }
+
+    .sticker {
+        width: 90px;
+        height: 90px;
+    }
+}
+
+@media(max-width:520px) {
+    header {
+        padding: 0 13px;
+        height: 60px;
+    }
+
+    .logo {
+        font-size: 11px;
+    }
+
+    .logo small {
+        font-size: 7px;
+    }
+
+    .hero h1 {
+        font-size: 48px;
+    }
+
+    .hero p {
+        font-size: 10px;
+        max-width: 270px;
+        line-height: 1.5;
+    }
+
+    .sticker {
+        width: 74px;
+        height: 74px;
+        font-size: 30px;
+    }
+
+    .sticker b {
+        font-size: 8px;
+    }
+
+    main {
+        padding: 18px 11px;
+    }
+
+    .card {
+        padding: 15px 12px;
+        border-radius: 16px;
+    }
+
+    .calendar {
+        gap: 4px;
+    }
+
+    .day {
+        height: 36px;
+        font-size: 11px;
+    }
+
+    .calendar i {
+        min-height: 36px;
+    }
+
+    .dow {
+        font-size: 8px;
+    }
+
+    .heading h2,
+    .card h2 {
+        font-size: 23px;
+    }
+
+    .heading nav {
+        gap: 5px;
+    }
+
+    nav b {
+        min-width: 95px;
+        font-size: 10px;
+    }
+
+    .plan {
+        grid-template-columns: 22px 42px 1fr auto;
+        gap: 5px;
+        padding: 9px 6px;
+    }
+
+    .planinfo strong {
+        font-size: 10px;
+    }
+
+    .planinfo small {
+        font-size: 8px;
+    }
+
+    .message {
+        font-size: 14px;
+        padding: 12px 7px;
+    }
+
+    footer {
+        flex-direction: column;
+        line-height: 1.5;
+    }
+}

@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffe5f0">
+    <title>Моё расписание</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        🎀 МОЁ РАСПИСАНИЕ <small>от вани</small>
+        <small>МОИ ПЛАНЫ · МОИ МЕЧТЫ · МОЙ ДЕНЬ</small>
+    </div>
+    <span id="today"></span>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div>
+            <small>шаг за шагом...</small>
+            <h1>Сегодня можно<br><i>всё</i></h1>
+            <p>Добавь свои планы, отмечай выполненное.</p>
+        </div>
+        <div class="sticker">
+            ♡
+            <b>У тебя всё<br>получится!</b>
+        </div>
+    </section>
+
+    <!-- КАЛЕНДАРЬ -->
+    <section class="card">
+        <div class="heading">
+            <div>
+                <small>ТВОЙ КАЛЕНДАРЬ</small>
+                <h2>Выбери день</h2>
+            </div>
+
+            <nav>
+                <button id="prev">‹</button>
+                <b id="month"></b>
+                <button id="next">›</button>
+            </nav>
+        </div>
+
+        <div id="calendar" class="calendar"></div>
+        <div class="legend">● выбранная дата　<span>● есть планы</span></div>
+    </section>
+
+    <div class="columns">
+
+        <!-- ПЛАНЫ НА ДЕНЬ -->
+        <section class="card">
+
+            <div class="heading">
+                <div>
+                    <small>МОИ ДЕЛА</small>
+                    <h2 id="dateTitle">Планы на день</h2>
+                </div>
+                <b class="pill" id="count">0 дел</b>
+            </div>
+
+            <div class="progresslabel">
+                Мой прогресс
+                <b id="percent">0%</b>
+            </div>
+
+            <div class="progress">
+                <span id="bar"></span>
+            </div>
+
+            <div id="plans"></div>
+
+            <button class="add" id="add">＋ Добавить план</button>
+
+            <label class="field">
+                Заметка на этот день
+                <textarea id="note" placeholder="Что важно не забыть?"></textarea>
+            </label>
+
+            <small id="noteStatus">сохраниться автоматически не ссать </small>
+
+        </section>
+
+        <aside>
+
+            <!-- ДОБАВЛЕНИЕ ПЛАНА -->
+            <section class="card">
+
+                <small>НОВАЯ ЗАПИСЬ</small>
+                <h2 id="formTitle">Добавить новый план </h2>
+
+                <form id="form">
+
+                    <label class="field">
+                        Название
+                        <input id="name" required maxlength="90"
+                        placeholder="Например: английский, прогулка,пробник">
+                    </label>
+
+                    <div class="twocol">
+                        <label class="field">
+                            Дата
+                            <input id="date" type="date" required>
+                        </label>
+
+                        <label class="field">
+                            Время
+                            <input id="time" type="time">
+                        </label>
+                    </div>
+
+                    <label class="field">
+                        Категория
+                        <select id="category">
+                            <option value="study">📚 Учёба</option>
+                            <option value="personal">🌷 Личное</option>
+                            <option value="hobby">🎨 Хобби</option>
+                            <option value="health">🫧 Забота о себе</option>
+                            <option value="meeting">💗 Встреча с ваней</option>
+                            <option value="other">✨ Другое</option>
+                        </select>
+                    </label>
+
+                    <label class="field">
+                        Подробности
+                        <textarea id="details" rows="3"
+                        placeholder="Место, что взять с собой..."></textarea>
+                    </label>
+
+                    <div class="twocol">
+                        <button class="save" id="submit" type="submit">
+                            Сохранить план
+                        </button>
+                        <button type="button" class="cancel" id="cancel" hidden>
+                            Отмена
+                        </button>
+                    </div>
+
+                </form>
+
+                <p class="hint">
+                    Можно добавлять, менять и удалять планы 
+                </p>
+
+            </section>
+
+            <!-- ЗАБОТА О СЕБЕ -->
+            <section class="card">
+
+                <small>НЕ ЗАБЫВАЙ</small>
+                <h2>Забота о себе</h2>
+
+                <div id="care" class="care">
+                    <label><input type="checkbox" value="water"> Пить достаточно воды</label>
+                    <label><input type="checkbox" value="food"> Вовремя поесть!!!</label>
+                    <label><input type="checkbox" value="rest"> Немного отдохнуть</label>
+                </div>
+
+                <p class="hint">
+                    Отметки сохраняются отдельно для каждого дня.
+                </p>
+
+            </section>
+
+        </aside>
+    </div>
+
+    <div class="message">
+        🎀　<b>Помнить.</b> не обязательно успеть всё.
+    </div>
+
+    <footer>
+        Твой маленький уголок планов  ♡
+        <button id="export">Скачать резервную копию(демо вроде не работает)</button>
+    </footer>
+
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const KEY = 'pink-planner-v1';
+
+let db = {};
+
+try {
+    db = JSON.parse(localStorage.getItem(KEY) || '{}');
+} catch {
+    db = {};
+}
+
+let selected = iso(new Date());
+let shown = new Date();
+let editing = null;
+
+const months = [
+    'январь','февраль','март','апрель',
+    'май','июнь','июль','август',
+    'сентябрь','октябрь','ноябрь','декабрь'
+];
+
+const days = [
+    'воскресенье','понедельник','вторник',
+    'среда','четверг','пятница','суббота'
+];
+
+const cats = {
+    study: 'Учёба',
+    personal: 'Личное',
+    hobby: 'Хобби',
+    health: 'Забота о себе',
+    meeting: 'Встреча',
+    other: 'Другое'
+};
+
+const icons = {
+    study:'📚',
+    personal:'🌷',
+    hobby:'🎨',
+    health:'🫧',
+    meeting:'💗',
+    other:'✨'
+};
+
+function iso(d) {
+    return [
+        d.getFullYear(),
+        String(d.getMonth()+1).padStart(2,'0'),
+        String(d.getDate()).padStart(2,'0')
+    ].join('-');
+}
+
+function data(date = selected) {
+    if (!db[date]) {
+        db[date] = {
+            plans: [],
+            note: '',
+            care: {}
+        };
+    }
+    return db[date];
+}
+
+function save() {
+    localStorage.setItem(KEY, JSON.stringify(db));
+}
+
+function esc(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+    })[c]);
+}
+
+// КАЛЕНДАРЬ
+function calendar() {
+
+    $('month').textContent =
+        months[shown.getMonth()] + ' ' + shown.getFullYear();
+
+    let first = new Date(
+        shown.getFullYear(),
+        shown.getMonth(),
+        1
+    );
+
+    let offset = (first.getDay() + 6) % 7;
+
+    let n = new Date(
+        shown.getFullYear(),
+        shown.getMonth()+1,
+        0
+    ).getDate();
+
+    let s = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС']
+        .map(x => `<b class="dow">${x}</b>`)
+        .join('');
+
+    for (let i=0; i<offset; i++) {
+        s += '<i></i>';
+    }
+
+    for (let i=1; i<=n; i++) {
+
+        let d = iso(new Date(
+            shown.getFullYear(),
+            shown.getMonth(),
+            i
+        ));
+
+        let has = (db[d]?.plans || []).length;
+
+        s += `
+            <button class="day ${d===selected?'chosen':''}"
+                    data-day="${d}">
+                ${i}
+                ${has ? '<em></em>' : ''}
+            </button>
+        `;
+    }
+
+    $('calendar').innerHTML = s;
+
+    $('calendar').querySelectorAll('[data-day]')
+        .forEach(b => {
+            b.onclick = () => select(b.dataset.day);
+        });
+}
+
+// ОТОБРАЖЕНИЕ ПЛАНОВ
+function render() {
+
+    let d = data();
+
+    let dt = new Date(selected + 'T12:00:00');
+
+    let ps = [...d.plans].sort((a,b) =>
+        (a.time || '99:99').localeCompare(b.time || '99:99')
+    );
+
+    let done = ps.filter(x => x.done).length;
+
+    let pct = ps.length
+        ? Math.round(done / ps.length * 100)
+        : 0;
+
+    $('dateTitle').textContent =
+        dt.getDate() + ' ' +
+        months[dt.getMonth()] + ' · ' +
+        days[dt.getDay()];
+
+    $('count').textContent = ps.length + ' дел';
+    $('percent').textContent = pct + '%';
+    $('bar').style.width = pct + '%';
+
+    $('plans').innerHTML = ps.length
+        ? ps.map(x => `
+            <article class="plan ${x.done?'done':''}">
+
+                <button class="tick" data-check="${esc(x.id)}">
+                    ${x.done?'✓':''}
+                </button>
+
+                <b class="time">${esc(x.time || '♡')}</b>
+
+                <div class="planinfo">
+                    <strong>${esc(x.name)}</strong>
+                    <small>
+                        ${icons[x.category] || '✨'}
+                        ${cats[x.category] || 'Другое'}
+                        ${x.details ? ' · ' + esc(x.details) : ''}
+                    </small>
+                </div>
+
+                <span class="actions">
+                    <button data-edit="${esc(x.id)}">✎</button>
+                    <button data-del="${esc(x.id)}">×</button>
+                </span>
+
+            </article>
+        `).join('')
+        : `
+            <div class="empty">
+                🌸
+                <b>Пока планов нет</b>
+                <small>Добавь первое дело — пусть день будет прекрасным!</small>
+            </div>
+        `;
+
+    // ВЫПОЛНЕНИЕ
+    $('plans').querySelectorAll('[data-check]')
+        .forEach(b => {
+            b.onclick = () => {
+                let x = d.plans.find(x => x.id === b.dataset.check);
+                x.done = !x.done;
+                save();
+                all();
+            };
+        });
+
+    // УДАЛЕНИЕ
+    $('plans').querySelectorAll('[data-del]')
+        .forEach(b => {
+            b.onclick = () => {
+                if (confirm('Удалить план?')) {
+                    d.plans = d.plans.filter(
+                        x => x.id !== b.dataset.del
+                    );
+                    save();
+                    all();
+                }
+            };
+        });
+
+    // РЕДАКТИРОВАНИЕ
+    $('plans').querySelectorAll('[data-edit]')
+        .forEach(b => {
+            b.onclick = () => edit(b.dataset.edit);
+        });
+
+    $('note').value = d.note || '';
+
+    document.querySelectorAll('#care input')
+        .forEach(c => {
+            c.checked = !!d.care[c.value];
+        });
+
+    calendar();
+}
+
+function all() {
+    render();
+
+    $('today').textContent =
+        'Сегодня · ' +
+        new Date().toLocaleDateString('ru-RU', {
+            day:'numeric',
+            month:'long'
+        });
+}
+
+// ВЫБОР ДАТЫ
+function select(d) {
+    selected = d;
+    shown = new Date(d + 'T12:00:00');
+
+    reset();
+
+    $('date').value = d;
+
+    all();
+}
+
+// СБРОС ФОРМЫ
+function reset() {
+    $('form').reset();
+
+    editing = null;
+
+    $('formTitle').textContent = 'Добавить план ♡';
+    $('submit').textContent = 'Сохранить план';
+    $('cancel').hidden = true;
+
+    $('date').value = selected;
+}
+
+// РЕДАКТИРОВАНИЕ ПЛАНА
+function edit(id) {
+
+    let x = data().plans.find(p => p.id === id);
+
+    if (!x) return;
+
+    editing = id;
+
+    $('formTitle').textContent = 'Изменить план ♡';
+    $('submit').textContent = 'Сохранить изменения';
+    $('cancel').hidden = false;
+
+    $('name').value = x.name;
+    $('time').value = x.time || '';
+    $('category').value = x.category || 'other';
+    $('details').value = x.details || '';
+    $('date').value = selected;
+
+    $('formTitle').scrollIntoView({
+        behavior:'smooth',
+        block:'center'
+    });
+}
+
+// СОХРАНЕНИЕ ПЛАНА
+$('form').onsubmit = e => {
+
+    e.preventDefault();
+
+    let date = $('date').value;
+
+    let d = data(date);
+
+    let old = editing
+        ? d.plans.find(x => x.id === editing)
+        : null;
+
+    let obj = {
+        id: editing || String(Date.now()),
+        name: $('name').value.trim(),
+        time: $('time').value,
+        category: $('category').value,
+        details: $('details').value.trim(),
+        done: old?.done || false
+    };
+
+    if (!obj.name) return;
+
+    if (editing) {
+        d.plans = d.plans.filter(x => x.id !== editing);
+    }
+
+    d.plans.push(obj);
+
+    save();
+    select(date);
+
+    $('name').focus();
+};
+
+$('cancel').onclick = reset;
+
+$('add').onclick = () => {
+    $('name').focus();
+    $('formTitle').scrollIntoView({
+        behavior:'smooth',
+        block:'center'
+    });
+};
+
+// ПЕРЕКЛЮЧЕНИЕ МЕСЯЦЕВ
+$('prev').onclick = () => {
+    shown.setMonth(shown.getMonth()-1);
+    calendar();
+};
+
+$('next').onclick = () => {
+    shown.setMonth(shown.getMonth()+1);
+    calendar();
+};
+
+// ЗАМЕТКИ
+$('note').oninput = () => {
+    data().note = $('note').value;
+    save();
+    $('noteStatus').textContent = 'Сохранено ♡';
+};
+
+// ЗАБОТА О СЕБЕ
+document.querySelectorAll('#care input').forEach(c => {
+    c.onchange = () => {
+        data().care[c.value] = c.checked;
+        save();
+    };
+});
+
+// РЕЗЕРВНАЯ КОПИЯ
+$('export').onclick = () => {
+
+    let a = document.createElement('a');
+
+    let u = URL.createObjectURL(
+        new Blob(
+            [JSON.stringify(db,null,2)],
+            {type:'application/json'}
+        )
+    );
+
+    a.href = u;
+    a.download = 'my-pink-planner-backup.json';
+    a.click();
+
+    URL.revokeObjectURL(u);
+};
+
+$('date').value = selected;
+
+all();
+</script>
+
+</body>
+</html>
